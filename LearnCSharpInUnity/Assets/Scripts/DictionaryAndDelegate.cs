@@ -24,18 +24,21 @@ public class DictionaryAndDelegate : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start()
+    // 此处如果是Start，在DictDelegateReceiver那里，可能会产生key还没有初始化（Add）就被使用的情况。
+    void Awake()
     {
         for (byte index = (byte)TestMessageID.HeadTransform; index < (byte)TestMessageID.Max; index++)
         {
+            Debug.Log("TestMessageID index == " + index);
             if (MessageHandlers.ContainsKey((TestMessageID)index) == false)
             {
+                Debug.Log("MessageHandlers == " + index);
                 MessageHandlers.Add((TestMessageID)index, null);
             }
         }
 
-        MessageHandlers[TestMessageID.HeadTransform] = CallbackTest1;
-        MessageHandlers[TestMessageID.HeadTransform] += CallbackTest2;
+        //MessageHandlers[TestMessageID.HeadTransform] = CallbackTest1;
+        //MessageHandlers[TestMessageID.HeadTransform] += CallbackTest2;
     }
 
     private void CallbackTest1()
@@ -53,6 +56,7 @@ public class DictionaryAndDelegate : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("Update get KeyCode.Space");
             MessageCallback messageHandler = MessageHandlers[TestMessageID.HeadTransform];
             if (messageHandler != null)
             {
